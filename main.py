@@ -1,3 +1,2 @@
 if __name__ == "__main__":
-
-    import tetris_game
+    import boards.tetris_game

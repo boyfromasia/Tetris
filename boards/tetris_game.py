@@ -1,4 +1,6 @@
 from sys import exit
+from boards.next_shape import next_shape_board
+from boards.next_shape import draw_text
 import pygame
 import random
 import pprint
@@ -15,12 +17,13 @@ green = (0, 255, 0)
 blue = (0, 0, 255)
 yellow = (255, 255, 0)
 purple = (255, 0, 255)
-pink = (255, 192, 203)
+pink = (255, 165, 0)
 light_blue = (64, 224, 208)
+colors = [seashell, white, red, green, blue, yellow, purple, pink, light_blue]
 
 I = (([[6, 0], [6, 1], [6, 2], [6, 3]], [[5, 2], [6, 2], [7, 2], [8, 2]], [[6, 0], [6, 1], [6, 2], [6, 3]], [[5, 2], [6, 2], [7, 2], [8, 2]]), green)
-L = (([[6, 3], [6, 1], [6, 2], [7, 3]], [[6, 2], [7, 2], [7, 1], [5, 2]], [[6, 2], [6, 1], [6, 3], [5, 1]], [[6, 2], [7, 2], [5, 2], [5, 3]]), red)
-J = (([[6, 3], [6, 2], [6, 1], [5, 3]], [[6, 2], [7, 2], [7, 3], [5, 2]], [[6, 2], [6, 1], [6, 3], [7, 1]], [[6, 2], [7, 2], [5, 2], [5, 1]]), blue)
+L = (([[6, 2], [7, 2], [7, 1], [5, 2]], [[6, 2], [6, 1], [6, 3], [5, 1]], [[6, 2], [7, 2], [5, 2], [5, 3]], [[6, 3], [6, 1], [6, 2], [7, 3]]), red)
+J = (([[6, 2], [7, 2], [7, 3], [5, 2]], [[6, 2], [6, 1], [6, 3], [7, 1]], [[6, 2], [7, 2], [5, 2], [5, 1]], [[6, 3], [6, 2], [6, 1], [5, 3]]), blue)
 W = (([[6, 2], [6, 3], [7, 3], [5, 3]], [[6, 3], [6, 2], [6, 1], [7, 2]], [[6, 4], [6, 3], [7, 3], [5, 3]], [[6, 3], [6, 2], [6, 1], [5, 2]]), light_blue)
 Q = (([[6, 3], [7, 3], [6, 2], [7, 2]], [[6, 3], [7, 3], [6, 2], [7, 2]], [[6, 3], [7, 3], [6, 2], [7, 2]], [[6, 3], [7, 3], [6, 2], [7, 2]]), purple)
 Z = (([[6, 3], [7, 3], [5, 2], [6, 2]], [[6, 3], [6, 2], [7, 2], [7, 1]], [[6, 3], [7, 3], [5, 2], [6, 2]], [[6, 3], [6, 2], [7, 2], [7, 1]]), pink)
@@ -44,6 +47,8 @@ class Board:
         Рендер поля
         :param color: Цвет клетки
         """
+        pygame.draw.polygon(screen, blue, (self.get_coord((2, 3)),
+                                               self.get_coord((12, 3)) ,self.get_coord((12, 23)), self.get_coord((2, 23))), 10)
         for i in range(len(self.cells)):
             for j in range(len(self.cells[0])):
                 if self.cells[i][j] == -1:
@@ -97,7 +102,7 @@ class Board:
         :param color: Цвет клетки
         """
         self.cells[coords[1]][coords[0]] *= -1
-        self.render(screen, color)
+        #self.render(screen, color)
 
     def refresh(self):
         """
@@ -195,14 +200,20 @@ class Board:
 pygame.init()
 size = width, height = 500, 520
 screen = pygame.display.set_mode(size)
+screen2 = pygame.Surface((140, 180))
 screen.fill((0, 0, 0))
+screen2.fill((0, 0, 0))
 running = True
 board = Board()
+shape = random.choice(shapes)
+
 while running:
+    draw_text(screen2, random.choice(colors))
     if new_shape:
         "Выбор новой фигуры"
-        shape = random.choice(shapes)
+        next_shape = random.choice(shapes)
         new_shape = False
+        next_shape_board(next_shape[0][direction], next_shape[1], screen2)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -227,17 +238,20 @@ while running:
             l[1] += step_y
             l[0] += step_x
             board.start(l, screen, shape[1])
+        board.render(screen, shape[1])
         step_y += 1
     else:
         for i in range(4):
             "Сохранение фигуры"
             board.save([shape[0][direction][i][0] + step_x, shape[0][direction][i][1] + step_y - 1], shape[1])
+        shape = next_shape
         new_shape = True
         step_y = 0
         step_x = 0
         direction = 0
     board.refresh()
     board.delete_line()
+    screen.blit(screen2, (260, 55))
     if board.check_game_over():
         exit()
     pygame.display.flip()
