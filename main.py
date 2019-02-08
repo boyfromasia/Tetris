@@ -1,2 +1,7 @@
+from game import Game
+
+BLACK = "BLACK"
+
 if __name__ == "__main__":
-    import boards.tetris_game
+    game = Game()
+    game.run()
