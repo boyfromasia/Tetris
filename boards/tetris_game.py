@@ -17,44 +17,17 @@ class Board:
         Рендер поля
         :param color: Цвет клетки
         """
-        pygame.draw.polygon(screen, BLUE, (self.get_coord((2, 3)),
-                                               self.get_coord((12, 3)) ,self.get_coord((12, 23)), self.get_coord((2, 23))), 10)
-        for i in range(len(self.cells)):
-            for j in range(len(self.cells[0])):
-                if self.cells[i][j] == -1:
-                    self.draw(self.get_coord((j, i)), screen, WHITE)
-                else:
-                    if self.cells[i][j] == 1:
-                        self.draw(self.get_coord((j, i)), screen, color)
-                    elif self.cells[i][j] == 2:
-                        self.draw(self.get_coord((j, i)), screen, GREEN)
-                    elif self.cells[i][j] == 3:
-                        self.draw(self.get_coord((j, i)), screen, RED)
-                    elif self.cells[i][j] == 4:
-                        self.draw(self.get_coord((j, i)), screen, BLUE)
-                    elif self.cells[i][j] == 5:
-                        self.draw(self.get_coord((j, i)), screen, YELLOW)
-                    elif self.cells[i][j] == 6:
-                        self.draw(self.get_coord((j, i)), screen, PURPLE)
-                    elif self.cells[i][j] == 7:
-                        self.draw(self.get_coord((j, i)), screen, PINK)
-                    elif self.cells[i][j] == 8:
-                        self.draw(self.get_coord((j, i)), screen, LIGHT_BLUE)
+        self.draw_border(screen)
+        self.draw_board(screen, color)
 
-    def draw(self, pos, screen, color):
+    def draw_full_cell(self, pos, screen, color):
         """
-        Отрисовка каждой клетки
+        Отрисовка полной клетки
         :param color: Цвет клетки
         :param pos: позиция клетки
         """
-        pygame.draw.polygon(screen, color, ((pos[0], pos[1]),
-                                            (pos[0] + self.size_cell, pos[1]),
-                                            (pos[0] + self.size_cell, pos[1] + self.size_cell),
-                                            (pos[0], pos[1] + self.size_cell)))
-        pygame.draw.polygon(screen, SEASHELL, ((pos[0], pos[1]),
-                                            (pos[0] + self.size_cell, pos[1]),
-                                            (pos[0] + self.size_cell, pos[1] + self.size_cell),
-                                            (pos[0], pos[1] + self.size_cell)), 1)
+        self.draw_color_for_cell(screen, color, pos)
+        self.draw_border_for_cells(screen, pos)
 
     def get_coord(self, cell):
         """
@@ -155,6 +128,9 @@ class Board:
         return False
 
     def delete_line(self):
+        """
+        Удаление поля при заполнении
+        """
         for cell in self.cells[3:-1]:
             flag = False
             for dot in cell[2:12]:
@@ -168,3 +144,64 @@ class Board:
                 score += 1
                 del self.cells[self.cells.index(cell)]
                 self.cells.insert(3, [0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0])
+
+    def draw_border(self, screen):
+        """
+        Отрисока рамки для поля
+        :param screen: Экран
+        """
+        pygame.draw.polygon(screen, BLUE, (self.get_coord((2, 3)),
+                                           self.get_coord((12, 3)),
+                                           self.get_coord((12, 23)),
+                                           self.get_coord((2, 23))), 10)
+
+    def draw_board(self, screen, color):
+        """
+        Отрисовка поля
+        :param screen: Экран
+        :param color: Цвет
+        """
+        for i in range(len(self.cells)):
+            for j in range(len(self.cells[0])):
+                if self.cells[i][j] == -1:
+                    self.draw_full_cell(self.get_coord((j, i)), screen, WHITE)
+                else:
+                    if self.cells[i][j] == 1:
+                        self.draw_full_cell(self.get_coord((j, i)), screen, color)
+                    elif self.cells[i][j] == 2:
+                        self.draw_full_cell(self.get_coord((j, i)), screen, GREEN)
+                    elif self.cells[i][j] == 3:
+                        self.draw_full_cell(self.get_coord((j, i)), screen, RED)
+                    elif self.cells[i][j] == 4:
+                        self.draw_full_cell(self.get_coord((j, i)), screen, BLUE)
+                    elif self.cells[i][j] == 5:
+                        self.draw_full_cell(self.get_coord((j, i)), screen, YELLOW)
+                    elif self.cells[i][j] == 6:
+                        self.draw_full_cell(self.get_coord((j, i)), screen, PURPLE)
+                    elif self.cells[i][j] == 7:
+                        self.draw_full_cell(self.get_coord((j, i)), screen, PINK)
+                    elif self.cells[i][j] == 8:
+                        self.draw_full_cell(self.get_coord((j, i)), screen, LIGHT_BLUE)
+
+    def draw_border_for_cells(self, screen, pos):
+        """
+        Отрисовка рамки для одного квадрата
+        :param screen: Экран
+        :param pos: Координата
+        """
+        pygame.draw.polygon(screen, SEASHELL, ((pos[0], pos[1]),
+                                               (pos[0] + self.size_cell, pos[1]),
+                                               (pos[0] + self.size_cell, pos[1] + self.size_cell),
+                                               (pos[0], pos[1] + self.size_cell)), 1)
+
+    def draw_color_for_cell(self, screen, color, pos):
+        """
+        Отрисовка одной клетки
+        :param screen: Экран
+        :param color: Цвет
+        :param pos: Координата
+        """
+        pygame.draw.polygon(screen, color, ((pos[0], pos[1]),
+                                            (pos[0] + self.size_cell, pos[1]),
+                                            (pos[0] + self.size_cell, pos[1] + self.size_cell),
+                                            (pos[0], pos[1] + self.size_cell)))
