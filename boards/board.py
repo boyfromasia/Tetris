@@ -1,14 +1,15 @@
 import pygame
-from values.colors import RED, GREEN, BLUE, YELLOW, PURPLE, PINK, LIGHT_BLUE, WHITE, SEASHELL
-
-score = 0
-
+from values.config import WHITE, GREEN, LIGHT_BLUE, DARK_BLUE, RED, YELLOW, PURPLE, ORANGE
+from values.colors import GREY
+import os
+from values.config import BOARD
 
 class Board:
     def __init__(self, cells, size_cell):
         """
         Инициализация матрицы игры
         """
+        self.score = 0
         self.cells = cells
         self.size_cell = size_cell
 
@@ -106,13 +107,13 @@ class Board:
             self.cells[coord[1]][coord[0]] = 2
         elif color == RED:
             self.cells[coord[1]][coord[0]] = 3
-        elif color == BLUE:
+        elif color == DARK_BLUE:
             self.cells[coord[1]][coord[0]] = 4
         elif color == YELLOW:
             self.cells[coord[1]][coord[0]] = 5
         elif color == PURPLE:
             self.cells[coord[1]][coord[0]] = 6
-        elif color == PINK:
+        elif color == ORANGE:
             self.cells[coord[1]][coord[0]] = 7
         elif color == LIGHT_BLUE:
             self.cells[coord[1]][coord[0]] = 8
@@ -140,8 +141,7 @@ class Board:
                     flag = False
                     break
             if flag:
-                global score
-                score += 1
+                self.score += 1
                 del self.cells[self.cells.index(cell)]
                 self.cells.insert(3, [0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0])
 
@@ -150,10 +150,8 @@ class Board:
         Отрисока рамки для поля
         :param screen: Экран
         """
-        pygame.draw.polygon(screen, BLUE, (self.get_coord((2, 3)),
-                                           self.get_coord((12, 3)),
-                                           self.get_coord((12, 23)),
-                                           self.get_coord((2, 23))), 10)
+        image = self.load_image_border(BOARD)
+        screen.blit(image, (32, 52))
 
     def draw_board(self, screen, color):
         """
@@ -164,7 +162,7 @@ class Board:
         for i in range(len(self.cells)):
             for j in range(len(self.cells[0])):
                 if self.cells[i][j] == -1:
-                    self.draw_full_cell(self.get_coord((j, i)), screen, WHITE)
+                    self.draw_border_for_cells(screen, self.get_coord((j, i)))
                 else:
                     if self.cells[i][j] == 1:
                         self.draw_full_cell(self.get_coord((j, i)), screen, color)
@@ -173,13 +171,13 @@ class Board:
                     elif self.cells[i][j] == 3:
                         self.draw_full_cell(self.get_coord((j, i)), screen, RED)
                     elif self.cells[i][j] == 4:
-                        self.draw_full_cell(self.get_coord((j, i)), screen, BLUE)
+                        self.draw_full_cell(self.get_coord((j, i)), screen, DARK_BLUE)
                     elif self.cells[i][j] == 5:
                         self.draw_full_cell(self.get_coord((j, i)), screen, YELLOW)
                     elif self.cells[i][j] == 6:
                         self.draw_full_cell(self.get_coord((j, i)), screen, PURPLE)
                     elif self.cells[i][j] == 7:
-                        self.draw_full_cell(self.get_coord((j, i)), screen, PINK)
+                        self.draw_full_cell(self.get_coord((j, i)), screen, ORANGE)
                     elif self.cells[i][j] == 8:
                         self.draw_full_cell(self.get_coord((j, i)), screen, LIGHT_BLUE)
 
@@ -189,7 +187,7 @@ class Board:
         :param screen: Экран
         :param pos: Координата
         """
-        pygame.draw.polygon(screen, SEASHELL, ((pos[0], pos[1]),
+        pygame.draw.polygon(screen, GREY, ((pos[0], pos[1]),
                                                (pos[0] + self.size_cell, pos[1]),
                                                (pos[0] + self.size_cell, pos[1] + self.size_cell),
                                                (pos[0], pos[1] + self.size_cell)), 1)
@@ -201,7 +199,17 @@ class Board:
         :param color: Цвет
         :param pos: Координата
         """
-        pygame.draw.polygon(screen, color, ((pos[0], pos[1]),
-                                            (pos[0] + self.size_cell, pos[1]),
-                                            (pos[0] + self.size_cell, pos[1] + self.size_cell),
-                                            (pos[0], pos[1] + self.size_cell)))
+        image = self.load_image_block(color)
+        screen.blit(image, pos)
+
+    def load_image_border(self, name):
+        fullname = os.path.join('data', name)
+        image = pygame.image.load(fullname)
+        image = pygame.transform.scale(image, (216, 416))
+        return image
+
+    def load_image_block(self, name):
+        fullname = os.path.join('data', name)
+        image = pygame.image.load(fullname)
+        image = pygame.transform.scale(image, (20, 20))
+        return image

@@ -3,3 +3,27 @@ CELLS = [[0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0]
          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] for x in range(24)]
 
 SIZE_CELL = 20
+
+NEXT = "NEXT"
+
+FILE_NAME_RECORD = "record.txt"
+
+BOARD = "border.png"
+
+NEW_SHAPE_BOARD = "menu.png"
+
+RED = "red_block.png"
+
+GREEN = "green_block.png"
+
+PURPLE = "purple_block.png"
+
+YELLOW = "yellow_block.png"
+
+LIGHT_BLUE = "light_blue_block.png"
+
+DARK_BLUE = "dark_blue_block.png"
+
+ORANGE = "orange_block.png"
+
+WHITE = "white_block.png"
