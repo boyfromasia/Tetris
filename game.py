@@ -48,7 +48,7 @@ class Game:
             self.render()
             self.check_game_over()
             pygame.display.flip()
-            pygame.time.Clock().tick(10)
+            pygame.time.Clock().tick(7)
 
     def get_next_shape(self):
         """

@@ -29,14 +29,13 @@ class Score():
             self.record = f.read()
         image = self.load_image_border(RECORD)
         screen.blit(image, (0, 0))
+        self.draw_numbers(screen, self.record)
 
     def draw_score(self, screen, color, score):
         self.score = str(score * 50)
         image = self.load_image_border(SCORE)
         screen.blit(image, (0, 0))
         self.draw_numbers(screen, self.score)
-
-
 
     def time_in_game(self):
         pass
@@ -52,13 +51,13 @@ class Score():
 
     def load_image_border(self, name):
         fullname = os.path.join('data/boards', name)
-        image = pygame.image.load(fullname)
+        image = pygame.image.load(fullname).convert_alpha()
         image = pygame.transform.scale(image, (180, 50))
         return image
 
     def load_image_number(self, name):
         fullname = os.path.join('data/numbers', name)
-        image = pygame.image.load(fullname)
+        image = pygame.image.load(fullname).convert_alpha()
         image = pygame.transform.scale(image, (30, 23))
         return image
 
@@ -73,7 +72,7 @@ class Score():
                 image = self.load_image_number(ONE)
                 screen.blit(image, (180 - cnt * 30, 25))
             elif number == "2":
-                self.load_image_number(TWO)
+                image = self.load_image_number(TWO)
                 screen.blit(image, (180 - cnt * 30, 25))
             elif number == "3":
                 image = self.load_image_number(THREE)

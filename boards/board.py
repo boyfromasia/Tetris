@@ -89,13 +89,12 @@ class Board:
         :param step_y: Сколько шагов должен пройти по OY
         :param step_x: Сколько шагов должен пройти по OХ
         """
-        try:
-            for coord in coords:
-                if self.cells[coord[1] + step_y][coord[0] + step_x] * -1 != 1:
-                    return False
-            return True
-        except IndexError:
-            return False
+        for coord in coords:
+            if self.cells[coord[1] + step_y - 1][coord[0] + step_x] * -1 != 1:
+                return False
+            if self.cells[coord[1] + step_y][coord[0] + step_x] * -1 != 1:
+                return False
+        return True
 
     def save(self, coord, color):
         """
@@ -204,12 +203,12 @@ class Board:
 
     def load_image_border(self, name):
         fullname = os.path.join('data/boards', name)
-        image = pygame.image.load(fullname)
+        image = pygame.image.load(fullname).convert_alpha()
         image = pygame.transform.scale(image, (216, 416))
         return image
 
     def load_image_block(self, name):
         fullname = os.path.join('data/blocks', name)
-        image = pygame.image.load(fullname)
+        image = pygame.image.load(fullname).convert_alpha()
         image = pygame.transform.scale(image, (20, 20))
         return image
