@@ -8,6 +8,8 @@ NEXT = "NEXT"
 
 FILE_NAME_RECORD = "record.txt"
 
+BORDER_NEW_SHAPE = "border_new_shape.png"
+
 BOARD = "border.png"
 
 NEW_SHAPE_BOARD = "menu.png"
@@ -27,3 +29,7 @@ DARK_BLUE = "dark_blue_block.png"
 ORANGE = "orange_block.png"
 
 WHITE = "white_block.png"
+
+RECORD = "record.png"
+
+SCORE = "score.png"

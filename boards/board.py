@@ -203,13 +203,13 @@ class Board:
         screen.blit(image, pos)
 
     def load_image_border(self, name):
-        fullname = os.path.join('data', name)
+        fullname = os.path.join('data/boards', name)
         image = pygame.image.load(fullname)
         image = pygame.transform.scale(image, (216, 416))
         return image
 
     def load_image_block(self, name):
-        fullname = os.path.join('data', name)
+        fullname = os.path.join('data/blocks', name)
         image = pygame.image.load(fullname)
         image = pygame.transform.scale(image, (20, 20))
         return image

@@ -1,7 +1,7 @@
 import pygame
 from sys import exit
 from boards.board import Board
-from values.colors import BLACK, COLORS
+from values.colors import BLACK, COLORS, RED
 from boards.next_shape import NextShapeBoard, draw_text
 from values.config import CELLS, SIZE_CELL
 from boards.score import Score
@@ -16,10 +16,14 @@ class Game:
         size = 500, 520
         self.screen = pygame.display.set_mode(size)
         self.screen2 = pygame.Surface((216, 416))
-        self.screen3 = pygame.Surface((100, 100))
+        self.screen_record = pygame.Surface((180, 50))
+        self.screen_next_shape = pygame.Surface((120, 120))
+        self.screen_score = pygame.Surface((180, 50))
+        self.screen_time = pygame.Surface((180, 50))
         self.screen.fill(BLACK)
         self.screen2.fill(BLACK)
-        self.screen3.fill(BLACK)
+        self.screen_record.fill(BLACK)
+        self.screen_next_shape.fill(RED)
         self.direction = 0
         self.step_x = 0
         self.step_y = 0
@@ -35,7 +39,9 @@ class Game:
         Основной цикл игры
         """
         while self.running:
-            self.game_information = GameInformation(self.board.score, self.screen2, self.screen3)
+            self.game_information = GameInformation(self.board.score, self.screen2,
+                                                    self.screen_record, self.screen_next_shape,
+                                                    self.screen_score)
             self.get_next_shape()
             self.handle_event(pygame.event.get())
             self.update()
@@ -76,7 +82,10 @@ class Game:
         self.board.refresh()
         self.board.delete_line()
         self.screen.blit(self.screen2, (260, 53))
-        self.screen.blit(self.screen3, (300, 300))
+        self.screen.blit(self.screen_record, (278, 237))
+        self.screen.blit(self.screen_next_shape, (308, 100))
+        self.screen.blit(self.screen_score, (278, 303))
+        self.screen.blit(self.screen_time, (278, 371))
 
     def quit(self):
         """
@@ -158,7 +167,7 @@ class Game:
         """
         self.next_shape = random.choice(SHAPES)
         self.new_shape = False
-        self.game_information.next_shape_board(self.next_shape[0][self.direction], self.next_shape[1], self.screen2)
+        self.game_information.next_shape_board(self.next_shape[0], self.next_shape[1], self.screen2)
 
     def check_game_over(self):
         """
