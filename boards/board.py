@@ -1,8 +1,9 @@
 import pygame
-from values.config import WHITE, GREEN, LIGHT_BLUE, DARK_BLUE, RED, YELLOW, PURPLE, ORANGE
+from values.config import WHITE, GREEN, LIGHT_BLUE, DARK_BLUE, RED, YELLOW, PURPLE, ORANGE, ONE_LINE_SCORE
 from values.colors import GREY
-import os
+from work_with_image import Image
 from values.config import BOARD
+
 
 class Board:
     def __init__(self, cells, size_cell):
@@ -12,6 +13,7 @@ class Board:
         self.score = 0
         self.cells = cells
         self.size_cell = size_cell
+        self.line = 0
 
     def render(self, screen, color):
         """
@@ -26,6 +28,7 @@ class Board:
         Отрисовка полной клетки
         :param color: Цвет клетки
         :param pos: позиция клетки
+        :param screen: слой
         """
         self.draw_color_for_cell(screen, color, pos)
         self.draw_border_for_cells(screen, pos)
@@ -39,12 +42,12 @@ class Board:
         y = cell[1] * self.size_cell
         return (x, y)
 
-    def start(self, coords):
+    def start(self, coord):
         """
         Изменение значения в матрице. Начало Игры.
-        :param coords: координаты
+        :param coord: координаты
         """
-        self.cells[coords[1]][coords[0]] *= -1
+        self.cells[coord[1]][coord[0]] *= -1
 
     def refresh(self):
         """
@@ -89,12 +92,13 @@ class Board:
         :param step_y: Сколько шагов должен пройти по OY
         :param step_x: Сколько шагов должен пройти по OХ
         """
-        for coord in coords:
-            if self.cells[coord[1] + step_y - 1][coord[0] + step_x] * -1 != 1:
-                return False
-            if self.cells[coord[1] + step_y][coord[0] + step_x] * -1 != 1:
-                return False
-        return True
+        try:
+            for coord in coords:
+                if self.cells[coord[1] + step_y][coord[0] + step_x] * -1 != 1:
+                    return False
+            return True
+        except IndexError:
+            return False
 
     def save(self, coord, color):
         """
@@ -140,7 +144,8 @@ class Board:
                     flag = False
                     break
             if flag:
-                self.score += 1
+                self.score += (self.cells.index(cell) - 2) * ONE_LINE_SCORE
+                self.line += 1
                 del self.cells[self.cells.index(cell)]
                 self.cells.insert(3, [0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0])
 
@@ -149,7 +154,7 @@ class Board:
         Отрисока рамки для поля
         :param screen: Экран
         """
-        image = self.load_image_border(BOARD)
+        image = Image().load_image_boards(BOARD, (216, 416))
         screen.blit(image, (32, 52))
 
     def draw_board(self, screen, color):
@@ -198,17 +203,5 @@ class Board:
         :param color: Цвет
         :param pos: Координата
         """
-        image = self.load_image_block(color)
+        image = Image().load_image_block(color)
         screen.blit(image, pos)
-
-    def load_image_border(self, name):
-        fullname = os.path.join('data/boards', name)
-        image = pygame.image.load(fullname).convert_alpha()
-        image = pygame.transform.scale(image, (216, 416))
-        return image
-
-    def load_image_block(self, name):
-        fullname = os.path.join('data/blocks', name)
-        image = pygame.image.load(fullname).convert_alpha()
-        image = pygame.transform.scale(image, (20, 20))
-        return image

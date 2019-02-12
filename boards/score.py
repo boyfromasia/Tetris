@@ -1,101 +1,121 @@
 import pygame
 from values.colors import BLACK
-from values.config import FILE_NAME_RECORD, RECORD, SCORE
+from values.config import FILE_NAME_RECORD, RECORD, SCORE, LINE
 from values.numbers import ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, ZERO
 import os
+from work_with_image import Image
 
 
-class Score():
-    def __init__(self, score, screen_record, screen_score, color):
-        self.record = 0
-        self.score = 0
+class Score:
+    def __init__(self, line, score, screen_record, screen_score, screen_line):
         self.screen_score = screen_score
         self.screen_record = screen_record
-        self.render(score, screen_record, screen_score, color)
+        self.render(line, score, screen_record, screen_score, screen_line)
 
-    def render(self, score, screen_record, screen_score, color):
+    def render(self, line, score, screen_record, screen_score, screen_line):
         """
         Рендер поля
         :param color: Цвет клетки
         """
         screen_record.fill(BLACK)
-        self.draw_record(screen_record, color)
-        self.draw_score(screen_score, color, score)
+        self.draw_record(screen_record)
+        self.draw_score(screen_score, score)
         self.update_record()
-        self.time_in_game()
+        self.draw_line(screen_line, line)
 
-    def draw_record(self, screen, color):
+    def draw_record(self, screen):
+        """
+        Отрисовка рекорда
+        :param screen: слой
+       """
         with open(FILE_NAME_RECORD, "rt", encoding="utf-8") as f:
             self.record = f.read()
-        image = self.load_image_border(RECORD)
+        image = Image().load_image_boards(RECORD, (180, 60))
         screen.blit(image, (0, 0))
         self.draw_numbers(screen, self.record)
 
-    def draw_score(self, screen, color, score):
-        self.score = str(score * 50)
-        image = self.load_image_border(SCORE)
+    def draw_score(self, screen, score):
+        """
+        Отрисовка баллов наи данный момент
+        :param screen: слой
+        :param score: баллы
+        :return:
+        """
+        self.score = str(score)
+        image = Image().load_image_boards(SCORE, (180, 50))
         screen.blit(image, (0, 0))
         self.draw_numbers(screen, self.score)
 
-    def time_in_game(self):
-        pass
+    def draw_line(self, screen, line):
+        """
+        Отрисовка количество линий было убрано
+        :param screen: слой
+        :param line: количество линий
+        """
+        self.line = str(line)
+        image = Image().load_image_boards(LINE, (180, 50))
+        screen.blit(image, (0, 0))
+        self.draw_numbers(screen, self.line)
 
     def update_record(self):
+        """
+        обновление рекорда
+        """
         if int(self.record) <= int(self.score):
             self.delete_old_record()
             self.refractor_record()
 
     def refractor_record(self):
+        """
+        перезапись рекорда
+        """
         with open(FILE_NAME_RECORD, "wt", encoding="utf-8") as f:
             f.write(str(self.score))
 
-    def load_image_border(self, name):
-        fullname = os.path.join('data/boards', name)
-        image = pygame.image.load(fullname).convert_alpha()
-        image = pygame.transform.scale(image, (180, 50))
-        return image
-
-    def load_image_number(self, name):
-        fullname = os.path.join('data/numbers', name)
-        image = pygame.image.load(fullname).convert_alpha()
-        image = pygame.transform.scale(image, (30, 23))
-        return image
-
     def delete_old_record(self):
+        """
+        удаление старого рекорда
+        """
         with open(FILE_NAME_RECORD, "w", encoding="utf-8") as f:
             f.close()
 
     def draw_numbers(self, screen, score):
+        """
+        отрисовка цифр
+        :param screen: слой
+        :param score: то, что нужно нужно отрисовать
+        :return:
+        """
         cnt = 1
         for number in score[::-1]:
             if number == "1":
-                image = self.load_image_number(ONE)
+                image = Image().load_image_numbers(ONE)
                 screen.blit(image, (180 - cnt * 30, 25))
             elif number == "2":
-                image = self.load_image_number(TWO)
+                image = Image().load_image_numbers(TWO)
                 screen.blit(image, (180 - cnt * 30, 25))
             elif number == "3":
-                image = self.load_image_number(THREE)
+                image = Image().load_image_numbers(THREE)
                 screen.blit(image, (180 - cnt * 30, 25))
             elif number == "4":
-                image = self.load_image_number(FOUR)
+                image = Image().load_image_numbers(FOUR)
                 screen.blit(image, (180 - cnt * 30, 25))
             elif number == "5":
-                image = self.load_image_number(FIVE)
+                image = Image().load_image_numbers(FIVE)
                 screen.blit(image, (180 - cnt * 30, 25))
             elif number == "6":
-                image = self.load_image_number(SIX)
+                image = Image().load_image_numbers(SIX)
                 screen.blit(image, (180 - cnt * 30, 25))
             elif number == "7":
-                image = self.load_image_number(SEVEN)
+                image = Image().load_image_numbers(SEVEN)
                 screen.blit(image, (180 - cnt * 30, 25))
             elif number == "8":
-                image = self.load_image_number(EIGHT)
+                image = Image().load_image_numbers(EIGHT)
                 screen.blit(image, (180 - cnt * 30, 25))
             elif number == "9":
-                image = self.load_image_number(NINE)
+                image = Image().load_image_numbers(NINE)
                 screen.blit(image, (180 - cnt * 30, 25))
             elif number == "0":
-                image = self.load_image_number(ZERO)
+                image = Image().load_image_numbers(ZERO)
                 screen.blit(image, (180 - cnt * 30, 25))
             cnt += 1

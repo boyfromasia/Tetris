@@ -4,7 +4,13 @@ CELLS = [[0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0]
 
 SIZE_CELL = 20
 
-NEXT = "NEXT"
+ONE_LINE_SCORE = 1
+
+GAME_OVER = "game_over.png"
+
+LINE = "lines.png"
+
+INSTRUCTION = "instruction.png"
 
 FILE_NAME_RECORD = "record.txt"
 

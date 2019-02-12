@@ -1,25 +1,25 @@
 import pygame
-from sys import exit
 from boards.board import Board
-from values.colors import BLACK, COLORS, RED
-from boards.next_shape import NextShapeBoard, draw_text
-from values.config import CELLS, SIZE_CELL
-from boards.score import Score
+from values.colors import BLACK, RED
+from values.config import CELLS, SIZE_CELL, GAME_OVER, INSTRUCTION
 import random
+from work_with_image import Image
 from values.shape import SHAPES
 from boards.game_information import GameInformation
+import time
 
 
 class Game:
     def __init__(self):
         pygame.init()
+        pygame.display.set_caption("TETRIS")
         size = 500, 520
         self.screen = pygame.display.set_mode(size)
         self.screen2 = pygame.Surface((216, 416))
         self.screen_record = pygame.Surface((180, 50))
         self.screen_next_shape = pygame.Surface((120, 120))
         self.screen_score = pygame.Surface((180, 50))
-        self.screen_time = pygame.Surface((180, 50))
+        self.screen_line = pygame.Surface((180, 50))
         self.screen.fill(BLACK)
         self.screen2.fill(BLACK)
         self.screen_record.fill(BLACK)
@@ -27,28 +27,54 @@ class Game:
         self.direction = 0
         self.step_x = 0
         self.step_y = 0
+        self.time_start = 0
+        self.game_over_flag = False
         self.running = True
         self.board = Board(CELLS, SIZE_CELL)
         self.shape = random.choice(SHAPES)
         self.position = self.shape[0]
         self.color = self.shape[1]
         self.new_shape = True
+        self.start_game_flag = False
 
     def run(self):
         """
         Основной цикл игры
         """
         while self.running:
-            self.game_information = GameInformation(self.board.score, self.screen2,
-                                                    self.screen_record, self.screen_next_shape,
-                                                    self.screen_score)
-            self.get_next_shape()
-            self.handle_event(pygame.event.get())
-            self.update()
-            self.render()
-            self.check_game_over()
-            pygame.display.flip()
-            pygame.time.Clock().tick(7)
+            if self.start_game_flag:
+                if self.game_over_flag is False:
+                    self.start()
+                else:
+                    self.game_over()
+            else:
+                self.instruction()
+
+    def game_over(self):
+        """
+        При проигрыше выполняется выход
+        """
+        image = Image().load_image_boards(GAME_OVER, (500, 520))
+        self.screen.blit(image, (0, 0))
+        pygame.display.flip()
+        if time.time() - self.time_start >= 5:
+            self.running = False
+            pygame.quit()
+
+    def start(self):
+        """
+        Запуск игры
+        """
+        self.game_information = GameInformation(self.board.line, self.board.score, self.screen2,
+                                                self.screen_record, self.screen_next_shape, self.screen_line,
+                                                self.screen_score)
+        self.get_next_shape()
+        self.handle_event(pygame.event.get())
+        self.update()
+        self.render()
+        self.check_game_over()
+        pygame.display.flip()
+        pygame.time.Clock().tick(10)
 
     def get_next_shape(self):
         """
@@ -78,14 +104,16 @@ class Game:
             self.save_shape()
 
     def render(self):
-        """"""
+        """
+        Рендер экрана
+        """
         self.board.refresh()
         self.board.delete_line()
         self.screen.blit(self.screen2, (260, 53))
         self.screen.blit(self.screen_record, (278, 237))
         self.screen.blit(self.screen_next_shape, (308, 100))
         self.screen.blit(self.screen_score, (278, 303))
-        self.screen.blit(self.screen_time, (278, 371))
+        self.screen.blit(self.screen_line, (278, 371))
 
     def quit(self):
         """
@@ -151,7 +179,6 @@ class Game:
     def refresh_values(self):
         """
         Возвращение переменных в старое положение
-        :return:
         """
         self.position = self.next_shape[0]
         self.color = self.next_shape[1]
@@ -174,5 +201,20 @@ class Game:
         Обработка проигрыша
         """
         if self.board.check_game_over():
-            exit()
+            self.game_over_flag = True
+            self.time_start = time.time()
+
+    def instruction(self):
+        """
+        Экран инструкции
+        """
+        image = Image().load_image_boards(INSTRUCTION, (500, 520))
+        self.screen.blit(image, (0, 0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.quit()
+            if event.type == pygame.KEYDOWN:
+                self.screen.fill(BLACK)
+                self.start_game_flag = True
+        pygame.display.flip()
 
