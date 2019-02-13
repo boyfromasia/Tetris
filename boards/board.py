@@ -1,7 +1,7 @@
 import pygame
 from values.config import WHITE, GREEN, LIGHT_BLUE, DARK_BLUE, RED, YELLOW, PURPLE, ORANGE, ONE_LINE_SCORE
 from values.colors import GREY
-from work_with_image import Image
+from media_and_image import Image
 from values.config import BOARD
 
 

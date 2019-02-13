@@ -21,3 +21,9 @@ class Image:
         image = pygame.image.load(fullname).convert_alpha()
         image = pygame.transform.scale(image, (30, 23))
         return image
+
+    def load_music(self, name):
+        pygame.mixer.init()
+        fullname = os.path.join('music', name)
+        pygame.mixer.music.load(fullname)
+        pygame.mixer.music.play(-1, 0.0)

@@ -1,6 +1,6 @@
 import pygame
 from values.config import BORDER_NEW_SHAPE, GREEN, PURPLE, RED, DARK_BLUE
-from work_with_image import Image
+from media_and_image import Image
 import os
 
 

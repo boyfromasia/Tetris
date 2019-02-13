@@ -3,7 +3,7 @@ from values.colors import BLACK
 from values.config import FILE_NAME_RECORD, RECORD, SCORE, LINE
 from values.numbers import ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, ZERO
 import os
-from work_with_image import Image
+from media_and_image import Image
 
 
 class Score:

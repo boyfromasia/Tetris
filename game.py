@@ -3,15 +3,16 @@ from boards.board import Board
 from values.colors import BLACK, RED
 from values.config import CELLS, SIZE_CELL, GAME_OVER, INSTRUCTION
 import random
-from work_with_image import Image
+from media_and_image import Image
 from values.shape import SHAPES
 from boards.game_information import GameInformation
 import time
-
+from values.music import SOUNDTRACK
 
 class Game:
     def __init__(self):
         pygame.init()
+        Image().load_music(random.choice(SOUNDTRACK))
         pygame.display.set_caption("TETRIS")
         size = 500, 520
         self.screen = pygame.display.set_mode(size)
@@ -217,4 +218,5 @@ class Game:
                 self.screen.fill(BLACK)
                 self.start_game_flag = True
         pygame.display.flip()
+
 

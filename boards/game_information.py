@@ -1,7 +1,7 @@
 from boards.next_shape import NextShapeBoard
 from boards.score import Score
 from values.config import NEW_SHAPE_BOARD
-from work_with_image import Image
+from media_and_image import Image
 
 
 class GameInformation:
