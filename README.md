@@ -1,3 +1,8 @@
 # Tetris
 
-Проект, для изучения модуля [pygame](https://www.pygame.org/docs/)
+
+![Image](./readme/screen.png)
+
+#### Built with
+
+* [pygame](https://www.pygame.org/docs/)
